@@ -46,7 +46,7 @@ class AboutViewController: UIViewController {
             self.parentView.alpha = 1.0
         })
 
-        UIView.animate(withDuration: 6, animations: {
+        UIView.animate(withDuration: 4, animations: {
             self.textContainer.alpha = 1.0
         })
     }
@@ -95,7 +95,7 @@ class AboutViewController: UIViewController {
 
      @IBAction func emailPressed(_ sender: UIButton) {
 
-     let receipients = ["team@audiokitpro.com"]
+     let receipients = ["hello@audiokitpro.com"]
      let subject = "From AudioKit Synth App"
      let messageBody = ""
 

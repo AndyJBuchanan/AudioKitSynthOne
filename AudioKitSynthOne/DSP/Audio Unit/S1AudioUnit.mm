@@ -98,12 +98,16 @@
     _kernel.startNote(note, velocity, frequency);
 }
 
-- (void)setupWaveform:(UInt32)waveform size:(int)size {
-    _kernel.setupWaveform(waveform, (uint32_t)size);
+- (void)setupWaveform:(UInt32)tableIndex size:(int)size {
+    _kernel.setupWaveform(tableIndex, (uint32_t)size);
 }
 
-- (void)setWaveform:(UInt32)waveform withValue:(float)value atIndex:(UInt32)index {
-    _kernel.setWaveformValue(waveform, index, value);
+- (void)setWaveform:(UInt32)tableIndex withValue:(float)value atIndex:(UInt32)sampleIndex {
+    _kernel.setWaveformValue(tableIndex, sampleIndex, value);
+}
+
+- (void)setBandlimitFrequency:(UInt32)blIndex withFrequency:(float)frequency {
+    _kernel.setBandlimitFrequency(blIndex, frequency);
 }
 
 - (void)reset {
@@ -196,7 +200,7 @@
         state->setBuffer(outputData);
         state->processWithEvents(timestamp, frameCount, realtimeEventListHead);
         double currentTempo;
-        if ( self->_musicalContext ) {
+        if (self->_musicalContext) {
             if (self->_musicalContext( &currentTempo, NULL, NULL, NULL, NULL, NULL ) ) {
                 self->_kernel.handleTempoSetting(currentTempo);
             }

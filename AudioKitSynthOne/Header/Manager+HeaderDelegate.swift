@@ -98,7 +98,7 @@ extension Manager: HeaderDelegate {
     }
 
     func morePressed() {
-        guard Private.MailChimpAPIKey != "***REMOVED***" else {
+        guard Private.MailChimpAPIKey != "***REMOVED***" || appSettings.signedMailingList else {
            // Running source code with no mailchimp key
            self.displayAlertController("Congrats! 🎉", message: "Bonus presets have been added to BankA. " +
                 "We are all volunteers who made this app for free. " +
@@ -106,7 +106,7 @@ extension Manager: HeaderDelegate {
            didSignMailingList(email: "test@audiokitpro.com")
            return
         }
-        
+
         if signedMailingList {
             performSegue(withIdentifier: "SegueToMore", sender: self)
         } else {
@@ -121,7 +121,9 @@ extension Manager: HeaderDelegate {
         // Turn off held notes on keybaord
         keyboardView.allNotesOff()
 
-        displayAlertController("Midi Panic", message: "All notes have been turned off.")
+        let title = NSLocalizedString("Midi Panic", comment: "Alert Title: MIDI Panic")
+        let message = NSLocalizedString("All notes have been turned off.", comment: "Alert Message: MIDI Panic")
+        displayAlertController(title, message: message)
     }
 
     func aboutPressed() {

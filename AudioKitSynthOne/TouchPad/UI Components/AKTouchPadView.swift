@@ -101,7 +101,7 @@ public class AKTouchPadView: UIView {
         UIView.animate(
             withDuration: 0.2,
             delay: 0.0,
-            options: UIViewAnimationOptions(),
+            options: UIView.AnimationOptions(),
             animations: {
                 self.touchPointView.center = CGPoint(x: centerPointX, y: centerPointY)
             },
@@ -112,7 +112,7 @@ public class AKTouchPadView: UIView {
                                                                    taper: self.horizontalTaper)
                 self.verticalValue = Double(self.y).denormalized(to: self.verticalRange, taper: self.verticalTaper)
                 self.completionHandler(self.horizontalValue, self.verticalValue, true, true)
-        })
+            })
     }
 
     func updateTouchPoint(_ newX: Double, _ newY: Double) {

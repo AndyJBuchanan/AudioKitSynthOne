@@ -25,14 +25,16 @@ class AppSettings: Codable {
     var isPreRelease = false
     var signedMailingList = false
     var backgroundAudio = false
+    var neverSleep = false
     var midiChannel = 0
     var midiSources = ["AudioKit Synth One"]
     var omniMode = true
     var plotFilled = true
     var velocitySensitive = false
     var freezeArpRate = false // true = don't modify when preset changes
-    var freezeDelay = false // true = don't modify when preset changes
-    var freezeReverb = false // true = don't modify when preset changes
+    var freezeDelay = false // true = don't modify current delay parameters when preset changes
+    var freezeReverb = false // true = don't modify current reverb parameters when preset changes
+    var freezeArpSeq = false // true = don't modify current arp+seq parameters when preset changes
     var portamentoHalfTime = 0.1 // global portamento HALFTIME for dsp params that are smoothed
 
     //Settings: "Save Tuning Panel w/Presets" -> saveTuningWithPreset = True/False
@@ -45,7 +47,7 @@ class AppSettings: Codable {
     var launches = 0
 
     // Presets version
-    var presetsVersion = 1.22
+    var presetsVersion = 1.23
 
     // MIDI Learn Settings
 
@@ -122,6 +124,7 @@ class AppSettings: Codable {
         isPreRelease = dictionary["isPreRelease"] as? Bool ?? isPreRelease
         signedMailingList = dictionary["signedMailingList"] as? Bool ?? signedMailingList
         backgroundAudio = dictionary["backgroundAudio"] as? Bool ?? backgroundAudio
+        neverSleep = dictionary["neverSleep"] as? Bool ?? neverSleep
         midiChannel = dictionary["midiChannel"] as? Int ?? midiChannel
         omniMode = dictionary["omniMode"] as? Bool ?? omniMode
         midiSources = dictionary["midiSources"] as? [String] ?? midiSources
@@ -130,6 +133,7 @@ class AppSettings: Codable {
         freezeArpRate = dictionary["freezeArpRate"] as? Bool ?? freezeArpRate
         freezeDelay = dictionary["freezeDelay"] as? Bool ?? freezeDelay
         freezeReverb = dictionary["freezeReverb"] as? Bool ?? freezeReverb
+        freezeArpSeq = dictionary["freezeArpSeq"] as? Bool ?? freezeArpSeq
         saveTuningWithPreset = dictionary["saveTuningWithPreset"] as? Bool ?? saveTuningWithPreset
         presetsVersion = dictionary["presetsVersion"] as? Double ?? presetsVersion
 
@@ -147,6 +151,7 @@ class AppSettings: Codable {
         resonanceCC = dictionary["resonanceCC"] as? Int ?? resonanceCC
         subVolumeCC = dictionary["subVolumeCC"] as? Int ?? subVolumeCC
         fmVolumeCC = dictionary["fmVolumeCC"] as? Int ?? fmVolumeCC
+        fmAmountCC = dictionary["fmAmountCC"] as? Int ?? fmAmountCC 
         noiseVolumeCC = dictionary["noiseVolumeCC"] as? Int ?? noiseVolumeCC
         glideKnobCC = dictionary["glideKnobCC"] as? Int ?? glideKnobCC
 

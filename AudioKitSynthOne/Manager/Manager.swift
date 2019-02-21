@@ -26,7 +26,7 @@ public class Manager: UpdatableViewController {
     @IBOutlet weak var midiButton: SynthButton!
     @IBOutlet weak var holdButton: SynthButton!
     @IBOutlet weak var monoButton: SynthButton!
-    @IBOutlet weak var keyboardToggle: SynthButton!
+	@IBOutlet weak var keyboardToggle: SynthButton!
     @IBOutlet weak var octaveStepper: Stepper!
     @IBOutlet weak var configKeyboardButton: SynthButton!
     @IBOutlet weak var bluetoothButton: AKBluetoothMIDIButton!
@@ -34,6 +34,7 @@ public class Manager: UpdatableViewController {
     @IBOutlet weak var midiLearnToggle: SynthButton!
     @IBOutlet weak var pitchBend: AKVerticalPad!
     @IBOutlet weak var modWheelPad: AKVerticalPad!
+    @IBOutlet weak var linkButton: AKLinkButton!
 
     weak var embeddedViewsDelegate: EmbeddedViewsDelegate?
 
@@ -122,7 +123,7 @@ public class Manager: UpdatableViewController {
         keyboardView?.polyphonicMode = conductor.synth.getSynthParameter(.isMono) < 1 ? true : false
 
         // Set Header as Delegate
-        if let headerVC = self.childViewControllers.first as? HeaderViewController {
+        if let headerVC = self.children.first as? HeaderViewController {
             headerVC.delegate = self
             headerVC.headerDelegate = self
         }
@@ -135,6 +136,10 @@ public class Manager: UpdatableViewController {
         bluetoothButton.centerPopupIn(view: view)
         bluetoothButton.layer.cornerRadius = 2
         bluetoothButton.layer.borderWidth = 1
+
+        #if ABLETON_ENABLED_1
+        linkButton.centerPopupIn(view: view)
+        #endif
 
         // Setup Callbacks
         setupCallbacks()
@@ -187,6 +192,10 @@ public class Manager: UpdatableViewController {
 
         // Setup AudioBus MIDI Input
         setupAudioBusInput()
+		
+		holdButton.accessibilityValue = self.keyboardView.holdMode ? NSLocalizedString("On", comment: "On") : NSLocalizedString("Off", comment: "Off")
+		monoButton.accessibilityValue = self.keyboardView.polyphonicMode ? NSLocalizedString("Off", comment: "Off") : NSLocalizedString("On", comment: "On")
+		
     }
 
     public override func viewDidAppear(_ animated: Bool) {
@@ -201,7 +210,7 @@ public class Manager: UpdatableViewController {
 
         // Set Mailing List Button
         signedMailingList = appSettings.signedMailingList
-        if let headerVC = self.childViewControllers.first as? HeaderViewController {
+        if let headerVC = self.children.first as? HeaderViewController {
             headerVC.updateMailingListButton(appSettings.signedMailingList)
         }
 
@@ -239,7 +248,12 @@ public class Manager: UpdatableViewController {
 
         // Push Notifications request
         if appSettings.launches == 9 && !appSettings.pushNotifications { pushPopUp() }
-        if appSettings.launches % 18 == 0 && !appSettings.pushNotifications && !appSettings.isPreRelease && appSettings.launches > 0 { pushPopUp() }
+        if appSettings.launches % 18 == 0 &&
+            !appSettings.pushNotifications &&
+            !appSettings.isPreRelease &&
+            appSettings.launches > 0 {
+            pushPopUp()
+        }
 
         // Keyboard show or hide on launch
         keyboardToggle.value = appSettings.showKeyboard
@@ -258,10 +272,12 @@ public class Manager: UpdatableViewController {
         appendMIDIKnobs(from: sequencerPanel)
         appendMIDIKnobs(from: devViewController)
         appendMIDIKnobs(from: tuningsPanel)
+
+        setupLinkStuff()
     }
 
     // Make edge gestures more responsive
-    public override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
+    public override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
         return UIRectEdge.all
     }
 
@@ -288,6 +304,7 @@ public class Manager: UpdatableViewController {
         if isMono != monoButton.value {
             monoButton.value = isMono
             self.keyboardView.polyphonicMode = isMono > 0 ? false : true
+		
         }
 
         if parameter == .cutoff {
